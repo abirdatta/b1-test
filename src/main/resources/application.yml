@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
+#spring.jpa.show-sql: true
+logging:
+  file: /logs/student-enrolment.log
+  level:
+    com.b1.studentenrolment: INFO
+    org.hibernate: INFO
+#server.port: 9000
+#management.port: 9001
+#management.security.enabled: false
