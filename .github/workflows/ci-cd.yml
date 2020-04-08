@@ -22,8 +22,10 @@ jobs:
       run: mvn clean install -Pintegration
 
     # Runs a set of commands using the runners shell
-    - name: Create App Docker image
+    - name: Create & Push App Docker image
       run: |
         APP_TAG=`git rev-parse --short HEAD`
         echo $APP_TAG
         docker build -t abirdatta/student-api:$APP_TAG .
+        docker login --username abirdatta --password {{ secrets.DOCKERHUB_LOGIN_PASSWORD }}
+        docker push abirdatta/student-api:$APP_TAG
