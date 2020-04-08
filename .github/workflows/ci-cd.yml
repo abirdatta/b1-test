@@ -26,6 +26,6 @@ jobs:
       run: |
         APP_TAG=`git rev-parse --short HEAD`
         echo $APP_TAG
-        docker build -t abirdatta/student-api:$APP_TAG .
+        docker build -t abirdatta/b1-test-api:$APP_TAG .
         docker login -u abirdatta -p ${{ secrets.DOCKERHUB_LOGIN_PASSWORD }}
-        docker push abirdatta/student-api:$APP_TAG
+        docker push abirdatta/b1-test-api:$APP_TAG
