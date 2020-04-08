@@ -1,0 +1,29 @@
+name: student-api-ci-cd
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    # Runs a single command using the runners shell
+    - name: Run Unit tests, Integration Tests and build artifact
+      run: mvn clean install -Pintegration
+
+    # Runs a set of commands using the runners shell
+    - name: Create App Docker image
+      run: |
+        APP_TAG=`git rev-parse --short HEAD`
+        echo $APP_TAG
+        docker build -t abirdatta/student-api:$APP_TAG .
