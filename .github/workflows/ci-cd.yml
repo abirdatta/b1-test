@@ -27,5 +27,5 @@ jobs:
         APP_TAG=`git rev-parse --short HEAD`
         echo $APP_TAG
         docker build -t abirdatta/student-api:$APP_TAG .
-        docker login --username abirdatta --password {{ secrets.DOCKERHUB_LOGIN_PASSWORD }}
+        docker login -u abirdatta -p {{ secrets.DOCKERHUB_LOGIN_PASSWORD }}
         docker push abirdatta/student-api:$APP_TAG
