@@ -4,12 +4,12 @@ name: student-api-ci-cd
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [ xyz ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  build:
+  test-build-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +29,16 @@ jobs:
         docker build -t abirdatta/b1-test-api:$APP_TAG .
         docker login -u abirdatta -p ${{ secrets.DOCKERHUB_LOGIN_PASSWORD }}
         docker push abirdatta/b1-test-api:$APP_TAG
+  deploy:
+    runs-on: [ubuntu-latest]
+    needs: test-build-push
+    steps:
+      - name: rolling-update-ecs-service
+        working-directory: terraform/ecs-task-definition-services
+        run: |
+          APP_TAG=`git rev-parse --short HEAD`
+          sed -i -e "s/SED_IMAGE_VERSION/APP_TAG/g" *.tf; \
+          terraform init
+          terraform workspace new dev
+          terraform plan
+          terraform apply --auto-approve
