@@ -25,13 +25,18 @@ jobs:
         docker build -t abirdatta/b1-test-api:$APP_TAG .
         docker login -u abirdatta -p ${{ secrets.DOCKERHUB_LOGIN_PASSWORD }}
         docker push abirdatta/b1-test-api:$APP_TAG
-
+    - name: Install Terraform
+      uses: little-core-labs/install-terraform@v1
     - name: rolling-update-ecs-service
       working-directory: terraform/ecs-task-definition-services
       run: |
         export APP_TAG=`git rev-parse --short HEAD`
-        make terraform-install
-        make terraform-apply
+        sed -i -e "s/SED_IMAGE_VERSION/${APP_TAG}/g" *.tf
+        terraform workspace new dev
+        terraform workspace select dev
+        terraform init -input=false
+        terraform plan -input=false
+        terraform apply -input=false -auto-approve
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

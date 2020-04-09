@@ -17,14 +17,24 @@ jobs:
         uses: little-core-labs/install-terraform@v1
       - name: create-aws-network-instance-cluster-infra
         working-directory: terraform/infra
-        run: make terraform-apply
+        run: |
+          terraform workspace new dev
+          terraform workspace select dev
+          terraform init -input=false
+          terraform plan -input=false
+          terraform apply -input=false -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   
           AWS_DEFAULT_REGION: ap-southeast-1
       - name: create-aws-db-infra
         working-directory: terraform/db
-        run: make terraform-apply
+        run: |
+          terraform workspace new dev
+          terraform workspace select dev
+          terraform init -input=false
+          terraform plan -input=false
+          terraform apply -input=false -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   
