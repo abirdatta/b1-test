@@ -2,9 +2,10 @@ name: student-api-infra-deploy
 
 on:
   push:
-    branches: [ xyz ]
+    branches: [ master ]
     paths:
       - 'terraform/infra/**'
+      - 'terraform/db/**'
 
 jobs:
   create-aws-infra:
@@ -13,8 +14,9 @@ jobs:
       - name: create-aws-network-instance-cluster-infra
         working-directory: terraform/infra
         run: |
-          terraform init
           terraform workspace new dev
+          terraform workspace select dev
+          terraform init
           terraform plan
           terraform apply --auto-approve
         env:
@@ -24,8 +26,9 @@ jobs:
       - name: create-aws-db-infra
         working-directory: terraform/db
         run: |
-          terraform init
           terraform workspace new dev
+          terraform workspace select dev
+          terraform init
           terraform plan
           terraform apply --auto-approve
         env:
