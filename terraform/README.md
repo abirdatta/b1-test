@@ -1,4 +1,4 @@
-# Terraform code to implement the aws design mentioned in b1-test-arch-diagram.jpg
+# Terraform code to implement the aws design
 
 Terraform version used - v0.12.12
 
