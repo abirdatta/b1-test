@@ -32,14 +32,14 @@ jobs:
         env:
           TF_WORKSPACE: dev
       - name: 'Terraform Apply Infra'
-          uses: hashicorp/terraform-github-actions@master
-          with:
-            tf_actions_version: 0.12.13
-            tf_actions_subcommand: 'apply'
-            tf_actions_working_dir: 'terraform/infra'
-            tf_actions_comment: true
-          env:
-            TF_WORKSPACE: dev
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: 'apply'
+          tf_actions_working_dir: 'terraform/infra'
+          tf_actions_comment: true
+        env:
+          TF_WORKSPACE: dev
       - name: 'Terraform Init DB'
         uses: hashicorp/terraform-github-actions@master
         with:
@@ -59,12 +59,12 @@ jobs:
         env:
           TF_WORKSPACE: dev
       - name: 'Terraform Apply DB'
-          uses: hashicorp/terraform-github-actions@master
-          with:
-            tf_actions_version: 0.12.13
-            tf_actions_subcommand: 'apply'
-            tf_actions_working_dir: 'terraform/db'
-            tf_actions_comment: true
-          env:
-            TF_WORKSPACE: dev
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: 'apply'
+          tf_actions_working_dir: 'terraform/db'
+          tf_actions_comment: true
+        env:
+          TF_WORKSPACE: dev
 
