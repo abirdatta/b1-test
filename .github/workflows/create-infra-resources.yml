@@ -13,26 +13,18 @@ jobs:
   create-aws-infra:
     runs-on: [ubuntu-latest]
     steps:
+      - name: Get the latest terraform version
+        run: make terraform-install
       - name: create-aws-network-instance-cluster-infra
         working-directory: terraform/infra
-        run: |
-          terraform workspace new dev
-          terraform workspace select dev
-          terraform init
-          terraform plan
-          terraform apply --auto-approve
+        run: make terraform-apply
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   
           AWS_DEFAULT_REGION: ap-southeast-1
       - name: create-aws-db-infra
         working-directory: terraform/db
-        run: |
-          terraform workspace new dev
-          terraform workspace select dev
-          terraform init
-          terraform plan
-          terraform apply --auto-approve
+        run: make terraform-apply
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   
