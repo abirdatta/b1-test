@@ -13,8 +13,8 @@ jobs:
   create-aws-infra:
     runs-on: [ubuntu-latest]
     steps:
-      - name: Get the latest terraform version
-        run: make terraform-install
+      - name: Install Terraform
+        uses: little-core-labs/install-terraform@v1
       - name: create-aws-network-instance-cluster-infra
         working-directory: terraform/infra
         run: make terraform-apply
