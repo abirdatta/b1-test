@@ -3,6 +3,8 @@ name: student-api-infra-deploy
 on:
   push:
     branches: [ master ]
+    tags:
+      - INFRA-DEPLOY-*
     paths:
       - 'terraform/infra/**'
       - 'terraform/db/**'
