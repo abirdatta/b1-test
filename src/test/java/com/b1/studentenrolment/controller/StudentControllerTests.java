@@ -107,6 +107,25 @@ public class StudentControllerTests {
                 .andExpect(jsonPath("nationality", is(studentResponse.getNationality())));
     }
 
+    @Test
+    public void getAllStudentsByClassNameTest() throws Exception {
+        when(studentService.findStudentsByClassName("2A")).thenReturn(buildStudentsSameClass());
+        this.mockMvc.perform(get("/students/class/2A"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].firstName", is("A")))
+                .andExpect(jsonPath("$[0].lastName", is("D")))
+                .andExpect(jsonPath("$[0].className", is("2A")))
+                .andExpect(jsonPath("$[0].nationality", is("Indian")))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].firstName", is("S")))
+                .andExpect(jsonPath("$[1].lastName", is("D")))
+                .andExpect(jsonPath("$[1].className", is("2A")))
+                .andExpect(jsonPath("$[1].nationality", is("Singaporean")));
+    }
+
     private Student buildStudentRequest(){
         return new Student("A","D","1A","Indian");
     }
@@ -118,9 +137,20 @@ public class StudentControllerTests {
     private Iterable<Student> buildStudents() {
         Student student1 = new Student(1,"A","D","1A","Indian");
         Student student2 = new Student(2,"S","D","2A","Singaporean");
-        List<Student> students = new ArrayList<>();
-        students.add(student1);
-        students.add(student2);
+        List<Student> students = new ArrayList<Student>() {{
+            add(student1);
+            add(student2);
+        }};
+        return students;
+    }
+
+    private List<Student> buildStudentsSameClass() {
+        Student student1 = new Student(1,"A","D","2A","Indian");
+        Student student2 = new Student(2,"S","D","2A","Singaporean");
+        List<Student> students = new ArrayList<Student>() {{
+            add(student1);
+            add(student2);
+        }};
         return students;
     }
 }
