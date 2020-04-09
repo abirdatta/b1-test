@@ -10,7 +10,11 @@ on:
 jobs:
   test-build-push:
     runs-on: ubuntu-latest
-
+    env:
+      TF_WORKSPACE: dev
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ap-southeast-1
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
@@ -20,24 +24,37 @@ jobs:
 
     - name: Create & Push App Docker image
       run: |
-        APP_TAG=`git rev-parse --short HEAD`
+        export APP_TAG=`git rev-parse --short HEAD`
         echo $APP_TAG
         docker build -t abirdatta/b1-test-api:$APP_TAG .
         docker login -u abirdatta -p ${{ secrets.DOCKERHUB_LOGIN_PASSWORD }}
         docker push abirdatta/b1-test-api:$APP_TAG
-    - name: Install Terraform
-      uses: little-core-labs/install-terraform@v1
-    - name: rolling-update-ecs-service
+
+    - name: Update Image Version in task def tf files
       working-directory: terraform/ecs-task-definition-services
       run: |
         export APP_TAG=`git rev-parse --short HEAD`
-        sed -i -e "s/SED_IMAGE_VERSION/${APP_TAG}/g" *.tf
-        terraform workspace new dev
-        terraform workspace select dev
-        terraform init -input=false
-        terraform plan -input=false
-        terraform apply -input=false -auto-approve
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: ap-southeast-1
+        sed -i -e "s/SED_IMAGE_VERSION/$APP_TAG/g" *.tf
+
+    - name: 'Terraform Init Code deploy'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.12.21
+        tf_actions_subcommand: 'init'
+        tf_actions_working_dir: 'terraform/ecs-task-definition-services'
+        tf_actions_comment: true
+    - name: 'Terraform Plan Code deploy'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.12.21
+        tf_actions_subcommand: 'plan'
+        tf_actions_working_dir: 'terraform/ecs-task-definition-services'
+        tf_actions_comment: true
+    - name: 'Terraform Apply Code deploy'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 0.12.21
+        tf_actions_subcommand: 'apply'
+        tf_actions_working_dir: 'terraform/ecs-task-definition-services'
+        tf_actions_comment: true
+
