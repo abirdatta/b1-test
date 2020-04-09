@@ -18,11 +18,11 @@ jobs:
       - name: create-aws-network-instance-cluster-infra
         working-directory: terraform/infra
         run: |
-          terraform workspace new dev
-          terraform workspace select dev
-          terraform init -input=false
-          terraform plan -input=false
-          terraform apply -input=false -auto-approve
+          /usr/bin/terraform workspace new dev
+          /usr/bin/terraform workspace select dev
+          /usr/bin/terraform init -input=false
+          /usr/bin/terraform plan -input=false
+          /usr/bin/terraform apply -input=false -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   
@@ -30,11 +30,11 @@ jobs:
       - name: create-aws-db-infra
         working-directory: terraform/db
         run: |
-          terraform workspace new dev
-          terraform workspace select dev
-          terraform init -input=false
-          terraform plan -input=false
-          terraform apply -input=false -auto-approve
+          /usr/bin/terraform workspace new dev
+          /usr/bin/terraform workspace select dev
+          /usr/bin/terraform init -input=false
+          /usr/bin/terraform plan -input=false
+          /usr/bin/terraform apply -input=false -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   
