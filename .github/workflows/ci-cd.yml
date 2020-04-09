@@ -3,9 +3,9 @@ name: student-api-ci-cd
 on:
   push:
     branches: [ master ]
-  paths:
-    - 'src/**'
-    - 'terraform/ecs-task-definition-services/**'
+    paths:
+      - 'src/**'
+      - 'terraform/ecs-task-definition-services/**'
 
 jobs:
   test-build-push:
