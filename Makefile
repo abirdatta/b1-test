@@ -1,3 +1,7 @@
+TF									:= $(shell which terraform)
+TF_OS								?= linux
+TF_ARCH							?= amd64
+TF_VERSION					?= $(shell curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r -M '.current_version')
 TERRAFORM	:= /usr/bin/terraform
 
 ###
