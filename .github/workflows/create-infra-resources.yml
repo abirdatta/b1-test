@@ -13,29 +13,58 @@ jobs:
   create-aws-infra:
     runs-on: [ubuntu-latest]
     steps:
-      - name: Install Terraform
-        uses: little-core-labs/install-terraform@v1
-      - name: create-aws-network-instance-cluster-infra
-        working-directory: terraform/infra
-        run: |
-          /usr/bin/terraform workspace new dev
-          /usr/bin/terraform workspace select dev
-          /usr/bin/terraform init -input=false
-          /usr/bin/terraform plan -input=false
-          /usr/bin/terraform apply -input=false -auto-approve
+      - name: 'Terraform Init Infra'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: 'init'
+          tf_actions_working_dir: 'terraform/infra'
+          tf_actions_comment: true
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   
-          AWS_DEFAULT_REGION: ap-southeast-1
-      - name: create-aws-db-infra
-        working-directory: terraform/db
-        run: |
-          /usr/bin/terraform workspace new dev
-          /usr/bin/terraform workspace select dev
-          /usr/bin/terraform init -input=false
-          /usr/bin/terraform plan -input=false
-          /usr/bin/terraform apply -input=false -auto-approve
+          TF_WORKSPACE: dev
+      - name: 'Terraform Plan Infra'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: 'plan'
+          tf_actions_working_dir: 'terraform/infra'
+          tf_actions_comment: true
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}   
-          AWS_DEFAULT_REGION: ap-southeast-1
+          TF_WORKSPACE: dev
+      - name: 'Terraform Apply Infra'
+          uses: hashicorp/terraform-github-actions@master
+          with:
+            tf_actions_version: 0.12.13
+            tf_actions_subcommand: 'apply'
+            tf_actions_working_dir: 'terraform/infra'
+            tf_actions_comment: true
+          env:
+            TF_WORKSPACE: dev
+      - name: 'Terraform Init DB'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: 'init'
+          tf_actions_working_dir: 'terraform/db'
+          tf_actions_comment: true
+        env:
+          TF_WORKSPACE: dev
+      - name: 'Terraform Plan DB'
+        uses: hashicorp/terraform-github-actions@master
+        with:
+          tf_actions_version: 0.12.13
+          tf_actions_subcommand: 'plan'
+          tf_actions_working_dir: 'terraform/db'
+          tf_actions_comment: true
+        env:
+          TF_WORKSPACE: dev
+      - name: 'Terraform Apply DB'
+          uses: hashicorp/terraform-github-actions@master
+          with:
+            tf_actions_version: 0.12.13
+            tf_actions_subcommand: 'apply'
+            tf_actions_working_dir: 'terraform/db'
+            tf_actions_comment: true
+          env:
+            TF_WORKSPACE: dev
+
