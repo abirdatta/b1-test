@@ -8,7 +8,7 @@ on:
       - 'terraform/ecs-task-definition-services/**'
 
 jobs:
-  test-build-push:
+  test-build-push-deploy:
     runs-on: ubuntu-latest
     env:
       TF_WORKSPACE: dev
@@ -21,6 +21,12 @@ jobs:
 
     - name: Run Unit tests, Integration Tests and build artifact
       run: mvn clean install -Pintegration
+
+    - name: upload test artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: jacoco-code-coverage
+        path: target/site/
 
     - name: Create & Push App Docker image
       run: |
